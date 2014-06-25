@@ -63,8 +63,8 @@ class AutoPoet
       poet.text
     end
 
-    def chain(&blk)
-      poet = self.new
+    def chain(text = nil, &blk)
+      poet = self.new(text)
       while match = poet.step
         blk.call(match) if block_given?
       end
