@@ -8,16 +8,21 @@ class AutoPoet
     'who is', 'will i', 'can i', 'my girlfriend', 'my boyfriend', "i can't", 'i can', 'my dad', 'my mom', 'my wife',
     'my husband', 'our family', 'some people', 'why do boys', 'why do girls'
     ]
+  KillWords = ['lyrics', 'http']
   attr_reader :text, :matches
   def initialize(seed_text = nil)
     seed_text ||= AutoPoet::Seeds.shuffle.pop
     @seeds = [@text = seed_text]
     @matches = []
-    @max_repetitions = 50
+    @max_repetitions = 7
   end
 
   def request
-    @terms = JSON.parse(open(AutoPoet::BaseURL + CGI.escape(@seeds[-1])).read)[1].select {|x| !(x['http'])}
+    @terms = self.filter(JSON.parse(open(AutoPoet::BaseURL + CGI.escape(@seeds[-1])).read)[1])
+  end
+
+  def filter(terms = [])
+    terms.select {|t| AutoPoet::KillWords.select {|kw| t[kw]}.empty? }
   end
 
   def acquire_seed(term)

@@ -22,7 +22,10 @@ module Asmodotus::Views
         h1 { "Asmodotus" }
         h6 { 'Asmodotus uses google search autocomplete to make beautiful words' }
         div.content! do
-          AutoPoet.chain(@text).each {|t| p t}
+          returns = AutoPoet.chain(@text).each {|t| p t}
+          if returns.empty?
+            p '-expletive deleted-'
+          end
         end
         form :method => :get do
           input :type => :text, :name => :q
